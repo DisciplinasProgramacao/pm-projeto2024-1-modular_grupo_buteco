@@ -1,17 +1,17 @@
-# Nome do projeto
+# Buteco
 Escreva um ou dois parágrafos resumindo o objetivo do seu projeto.
 
 ## Alunos integrantes da equipe
 
-* Nome completo do aluno 1
-* Nome completo do aluno 2
-* Nome completo do aluno 3
-* Nome completo do aluno 4
-* Nome completo do aluno 4
-* Nome completo do aluno 4
+*  Cristiano Nunes Pires Junior
+*  Erica Alves dos Santos
+*  Gabriel Faria de Oliveira
+* Joana Iuna de Morais
+* João Vitor Pedersoli Rajão
+* Rubia Coelho de Matos
 
 ## Professores responsáveis
 
-* Nome completo do professor 1
-* Nome completo do professor 2
+* João Caram Santos de Oliveira
+
 
