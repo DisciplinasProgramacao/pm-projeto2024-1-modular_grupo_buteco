@@ -41,7 +41,7 @@ public class Restaurante {
 
     public Cliente localizarCliente(int id) {
         for (Cliente cliente : clientes) {
-            if (cliente != null && cliente.hashCode() == id) { // Assuming hashCode is used as ID
+            if (cliente != null && cliente.hashCode() == id) { 
                 return cliente;
             }
         }
