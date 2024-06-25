@@ -94,6 +94,7 @@ public class Restaurante {
      * Encerra o atendimento de uma mesa.
      *
      * @param numeroMesa Número da mesa .
+     * @param numeroMesa Número da mesa .
      * @return A mesa desocupada ou null se não encontrada.
      */
     public Mesa encerrarAtendimento(int numeroMesa) {
