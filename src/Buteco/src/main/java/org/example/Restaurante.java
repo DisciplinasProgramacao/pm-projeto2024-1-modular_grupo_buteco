@@ -1,4 +1,5 @@
-package sistema;
+package org.example;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +77,21 @@ public class Restaurante {
         }
         return null;
     }
+    /**
+     * Localiza um cliente pelo seu nome.
+     *
+     * @param nome do cliente.
+     * @return Cliente localizado ou null se não encontrado.
+     */
+    public Cliente localizarCliente1(String nome) {
+        for (Cliente cliente : clientes) {
+            if (cliente != null && cliente.hashNome().equals(nome)) {
+                return cliente;
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Localiza uma mesa disponível para um determinado número de pessoas.
@@ -96,7 +112,6 @@ public class Restaurante {
      * Encerra o atendimento de uma mesa.
      *
      * @param numeroMesa Número da mesa .
-     * @param numeroMesa Número da mesa .
      * @return A mesa desocupada ou null se não encontrada.
      */
     public Mesa encerrarAtendimento(int numeroMesa) {
@@ -115,12 +130,18 @@ public class Restaurante {
      */
     public Requisicao processarFila() {
         if (!emEspera.isEmpty()) {
-            Requisicao requisicao = emEspera.remove(0);
-            requisicoesEmEspera--;
-            return requisicao;
+            Requisicao requisicao = emEspera.get(0);
+            Mesa mesaDisponivel = localizarMesaDisponivel(requisicao.getQuantPessoas());
+            if (mesaDisponivel != null) {
+                atenderRequisicao(requisicao, mesaDisponivel);
+                emEspera.remove(requisicao);
+                requisicoesEmEspera--;
+                return requisicao;
+            }
         }
         return null;
     }
+
 
     /**
      * Remove uma requisição da fila de espera.
@@ -160,14 +181,13 @@ public class Restaurante {
      * @return true se a requisição foi atendida, false caso contrário.
      */
     private void atenderRequisicao(Requisicao requisicao, Mesa mesa) {
-        if (mesa != null && requisicao != null && mesa.estahLiberada(requisicao.getQuantPessoas())) {
+        if (mesa != null && requisicao != null && !requisicao.estahEncerrada() && mesa.estahLiberada(requisicao.getQuantPessoas())) {
             requisicao.alocarMesa(mesa);
             atendidas.add(requisicao);
             requisicoesAtendidas++;
-
         }
-
     }
+
 
     /**
      * Retorna o status de todas as mesas do restaurante.
@@ -194,4 +214,5 @@ public class Restaurante {
         }
         return fila.toString();
     }
+
 }

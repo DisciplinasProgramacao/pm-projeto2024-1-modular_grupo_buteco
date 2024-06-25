@@ -1,4 +1,4 @@
-package sistema; /**
+package org.example; /**
  * MIT License
  *
  * Copyright(c) 2024 João Caram <caram@pucminas.br>

@@ -1,4 +1,4 @@
-package sistema; /**
+package org.example; /**
  * MIT License
  *
  * Copyright(c) 2024 João Caram <caram@pucminas.br>
@@ -22,9 +22,9 @@ package sistema; /**
  * SOFTWARE.
  */
 
- /**
-  * Classe cliente simples para o restaurante. Serve apenas para cadastro com nome e ID
-  */
+/**
+ * Classe cliente simples para o restaurante. Serve apenas para cadastro com nome e ID
+ */
 public class Cliente {
 
 	private static int ultimoID;
@@ -41,8 +41,8 @@ public class Cliente {
 	 */
 	public Cliente(String nome) {
 		if(nome.length() > 2)
-			nomeCliente = nome;	
-		else 
+			nomeCliente = nome;
+		else
 			nomeCliente = "Cliente anônimo";
 		idCliente = ++ultimoID;
 	}
@@ -55,5 +55,8 @@ public class Cliente {
 	@Override
 	public int hashCode(){
 		return idCliente;
+	}
+	public String hashNome(){
+		return nomeCliente;
 	}
 }
