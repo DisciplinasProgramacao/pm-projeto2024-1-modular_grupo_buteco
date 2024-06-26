@@ -1,162 +1,173 @@
 package org.example;
 
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
- * MIT License
- * <p>
- * Classe principal para o restaurante, gerencia mesas, clientes e requisições.
+ * Exceção personalizada para indicar que a capacidade máxima do restaurante foi atingida.
+ */
+class CapacidadeMaximaAtingidaException extends Exception {
+    public CapacidadeMaximaAtingidaException(String message) {
+        super(message);
+    }
+}
+
+/**
+ * Exceção personalizada para indicar que uma operação inválida foi tentada no restaurante.
+ */
+class OperacaoInvalidaException extends Exception {
+    public OperacaoInvalidaException(String message) {
+        super(message);
+    }
+}
+
+/**
+ * Classe principal para o gerenciamento de um restaurante, incluindo mesas, clientes e requisições.
  */
 public class Restaurante {
     private static final int MAX_CLIENTES = 100;
     private static final int MAX_FILA = 50;
+    private static final int QNT_MESAS = 10;
 
-    private Mesa[] mesas;
-    private Cliente[] clientes;
+    private Map<Integer, Mesa> mesas;
+    private Map<Integer, Cliente> clientes;
     private List<Requisicao> atendidas;
     private List<Requisicao> emEspera;
 
     private int quantClientes;
-    private int quantMesas;
     private int requisicoesAtendidas;
     private int requisicoesEmEspera;
 
-    /**
-     * Construtor do restaurante, inicializa mesas e listas de clientes e requisições.
-     *
-     * @param numMesas Número de mesas do restaurante.
-     */
-    public Restaurante(int numMesas) {
-        this.mesas = new Mesa[numMesas];
-        this.clientes = new Cliente[MAX_CLIENTES];
+    public Restaurante() {
+        this.mesas = new HashMap<>();
+        this.clientes = new HashMap<>();
         this.atendidas = new ArrayList<>();
         this.emEspera = new ArrayList<>();
         this.quantClientes = 0;
-        this.quantMesas = numMesas;
         this.requisicoesAtendidas = 0;
         this.requisicoesEmEspera = 0;
         criarMesas();
     }
 
-    /**
-     * Cria as mesas com capacidade padrão.
-     */
-    /**
-     * Cria as mesas com diferentes capacidades.
-     */
     private void criarMesas() {
         int index = 0;
-        // Cria 4 mesas para 4 pessoas
-        for (int i = 0; i < 4; i++) {
-            mesas[index++] = new Mesa(4);
-        }
-        // Cria 4 mesas para 6 pessoas
-        for (int i = 0; i < 4; i++) {
-            mesas[index++] = new Mesa(6);
-        }
-        // Cria 2 mesas para 8 pessoas
-        for (int i = 0; i < 2; i++) {
-            mesas[index++] = new Mesa(8);
-        }
-    }
+        int[] capacidades = {4, 6, 8};
+        int[] quantidadePorCapacidade = {4, 4, 2};
 
-    /**
-     * Adiciona um novo cliente ao restaurante.
-     *
-     * @param novo Novo cliente a ser adicionado.
-     * @return true se o cliente foi adicionado, false caso contrário.
-     */
-    public void addCliente(Cliente novo) {
-        if (quantClientes < MAX_CLIENTES) {
-            clientes[quantClientes++] = novo;
-
-        }
-
-    }
-
-    /**
-     * Localiza um cliente pelo seu ID.
-     *
-     * @param id ID do cliente.
-     * @return Cliente localizado ou null se não encontrado.
-     */
-    public Cliente localizarCliente(int id) {
-        for (Cliente cliente : clientes) {
-            if (cliente != null && cliente.hashCode() == id) {
-                return cliente;
+        for (int i = 0; i < capacidades.length; i++) {
+            for (int j = 0; j < quantidadePorCapacidade[i]; j++) {
+                mesas.put(index, new Mesa(capacidades[i]));
+                index++;
             }
         }
-        return null;
     }
-    /**
-     * Localiza um cliente pelo seu nome.
-     *
-     * @param nome do cliente.
-     * @return Cliente localizado ou null se não encontrado.
-     */
-    public Cliente localizarCliente1(String nome) {
-        for (Cliente cliente : clientes) {
-            if (cliente != null && cliente.hashNome().equals(nome)) {
-                return cliente;
-            }
+
+    public void addCliente(Cliente novo) throws CapacidadeMaximaAtingidaException {
+        if (quantClientes >= MAX_CLIENTES) {
+            throw new CapacidadeMaximaAtingidaException("Capacidade máxima de clientes atingida.");
         }
-        return null;
+        clientes.put(novo.hashCode(), novo);
+        quantClientes++;
     }
 
-
-    /**
-     * Localiza uma mesa disponível para um determinado número de pessoas.
-     *
-     * @param quantPessoas Quantidade de pessoas.
-     * @return Mesa disponível ou null se não encontrada.
-     */
-    public Mesa localizarMesaDisponivel(int quantPessoas) {
-        for (Mesa mesa : mesas) {
-            if (mesa != null && mesa.estahLiberada(quantPessoas)) {
-                return mesa;
-            }
+    public Cliente localizarCliente(int id) throws OperacaoInvalidaException {
+        Cliente cliente = clientes.get(id);
+        if (cliente == null) {
+            throw new OperacaoInvalidaException("Cliente não encontrado.");
         }
-        return null;
+        return cliente;
     }
 
-    /**
-     * Encerra o atendimento de uma mesa.
-     *
-     * @param numeroMesa Número da mesa .
-     * @return A mesa desocupada ou null se não encontrada.
-     */
-    public Mesa encerrarAtendimento(int numeroMesa) {
+    public Cliente localizarClienteNome(String nome) throws OperacaoInvalidaException {
+        return clientes.values().stream()
+            .filter(cliente -> cliente.hashNome().equals(nome))
+            .findFirst()
+            .orElseThrow(() -> new OperacaoInvalidaException("Cliente não encontrado pelo nome."));
+    }
+
+    public Mesa localizarMesaDisponivel(int quantPessoas) throws OperacaoInvalidaException {
+        return mesas.values().stream()
+            .filter(mesa -> mesa.estahLiberada(quantPessoas))
+            .findFirst()
+            .orElseThrow(() -> new OperacaoInvalidaException("Nenhuma mesa disponível para a quantidade de pessoas."));
+    }
+
+    public Mesa encerrarAtendimento(int numeroMesa) throws OperacaoInvalidaException {
         for (Requisicao requisicao : atendidas) {
-            if (!requisicao.estahEncerrada() && requisicao.ehDaMesa(numeroMesa)) {
-                return requisicao.encerrar();
+            if (requisicao.estahEncerrada() && requisicao.getMesa().getIdMesa() == numeroMesa) {
+                requisicao.encerrar();
+                return requisicao.getMesa();
             }
         }
-        return null;
+        throw new OperacaoInvalidaException("Mesa não encontrada ou já encerrada.");
+    }
+
+    public Requisicao processarFila() throws OperacaoInvalidaException {
+        if (emEspera.isEmpty()) {
+            throw new OperacaoInvalidaException("Nenhuma requisição na fila.");
+        }
+
+        Requisicao requisicao = emEspera.get(0);
+        Mesa mesaDisponivel = localizarMesaDisponivel(requisicao.getQuantPessoas());
+        if (mesaDisponivel != null) {
+            atenderRequisicao(requisicao, mesaDisponivel);
+            emEspera.remove(requisicao);
+            requisicoesEmEspera--;
+            return requisicao;
+        }
+
+        throw new OperacaoInvalidaException("Nenhuma mesa disponível para atender a requisição.");
+    }
+
+    private void atenderRequisicao(Requisicao requisicao, Mesa mesa) {
+        requisicao.alocarMesa(mesa);
+        atendidas.add(requisicao);
+        requisicoesAtendidas++;
+    }
+
+    public String statusMesas() {
+        StringBuilder status = new StringBuilder();
+        for (Mesa mesa : mesas.values()) {
+            status.append(mesa.toString()).append("\n");
+        }
+        return status.toString();
+    }
+
+    public String filaDeEspera() {
+        StringBuilder fila = new StringBuilder();
+        for (Requisicao requisicao : emEspera) {
+            fila.append(requisicao.toString()).append("\n");
+        }
+        return fila.toString();
     }
 
     /**
-     * Processa a fila de requisições, atendendo a próxima requisição.
+     * Registra uma nova requisição na fila de espera do restaurante.
      *
-     * @return Requisição processada ou null se a fila estiver vazia.
+     * @param novaRequisicao A nova requisição a ser adicionada à fila de espera.
+     * @throws Exception Se a fila de espera estiver cheia.
      */
-    public Requisicao processarFila() {
-        if (!emEspera.isEmpty()) {
-            Requisicao requisicao = emEspera.get(0);
-            Mesa mesaDisponivel = localizarMesaDisponivel(requisicao.getQuantPessoas());
-            if (mesaDisponivel != null) {
-                atenderRequisicao(requisicao, mesaDisponivel);
-                emEspera.remove(requisicao);
-                requisicoesEmEspera--;
-                return requisicao;
-            }
+    public void registrarRequisicao(Requisicao novaRequisicao) throws Exception {
+        if (emEspera.size() >= MAX_FILA) {
+            throw new Exception("A fila de espera alcançou sua capacidade máxima.");
         }
-        return null;
+        emEspera.add(novaRequisicao);
+        requisicoesEmEspera++;
+        System.out.println("Requisição registrada com sucesso. Agora há " + requisicoesEmEspera + " requisições na fila de espera.");
     }
-
-
-    /**
+    /** 
+    * Adiciona um item ao pedido de uma requisição específica.
+    *
+    * @param idCliente ID do cliente.
+    * @param item Item a ser adicionado ao pedido.
+    */
+   public void adicionarItemAoPedido(int idCliente, Item item) {
+       for (Requisicao requisicao : atendidas) {
+           if (requisicao.getCliente().hashCode() == idCliente && !requisicao.estahEncerrada()) {
+               requisicao.adicionarItemAoPedido(item);
+           }
+       }
+   }
+      /**
      * Remove uma requisição da fila de espera.
      *
      * @param pos Posição da requisição na fila.
@@ -170,97 +181,5 @@ public class Restaurante {
         }
 
     }
-
-    /**
-     * Adiciona um item ao pedido de uma requisição específica.
-     *
-     * @param idCliente ID do cliente.
-     * @param item Item a ser adicionado ao pedido.
-     */
-    public void adicionarItemAoPedido(int idCliente, Item item) {
-        for (Requisicao requisicao : atendidas) {
-            if (requisicao.getCliente().hashCode() == idCliente && !requisicao.estahEncerrada()) {
-                requisicao.adicionarItemAoPedido(item);
-            }
-        }
-    }
-
-    /**
-     * Calcula o preço total do pedido de uma requisição específica.
-     *
-     * @param idCliente ID do cliente.
-     * @return Preço total do pedido ou -1 se a requisição não for encontrada.
-     */
-    public double calcularPrecoTotalPedido(int idCliente) {
-        for (Requisicao requisicao : atendidas) {
-            if (requisicao.getCliente().hashCode() == idCliente) {
-                return requisicao.calcularPrecoTotal();
-            }
-        }
-        return -1;
-    }
-
-
-    /**
-     * Registra uma nova requisição na fila de espera.
-     *
-     * @param novaRequisicao Nova requisição a ser registrada.
-     * @return true se a requisição foi registrada, false caso contrário.
-     */
-    public void registrarRequisicao(Requisicao novaRequisicao) {
-        if (emEspera.size() < MAX_FILA) {
-            emEspera.add(novaRequisicao);
-            requisicoesEmEspera++;
-
-        }
-
-    }
-
-    /**
-     * Atende uma requisição em uma mesa específica.
-     *
-     * @param requisicao Requisição a ser atendida.
-     * @param mesa       Mesa onde a requisição será atendida.
-     * @return true se a requisição foi atendida, false caso contrário.
-     */
-    private void atenderRequisicao(Requisicao requisicao, Mesa mesa) {
-        if (mesa != null && requisicao != null && !requisicao.estahEncerrada() && mesa.estahLiberada(requisicao.getQuantPessoas())) {
-            requisicao.alocarMesa(mesa);
-            atendidas.add(requisicao);
-            requisicoesAtendidas++;
-        }
-    }
-
-
-    /**
-     * Retorna o status de todas as mesas do restaurante.
-     *
-     * @return String com o status de todas as mesas.
-     */
-    public String statusMesas() {
-        StringBuilder status = new StringBuilder();
-        for (Mesa mesa : mesas) {
-            if (mesa != null) {
-                status.append(mesa.toString()).append("\n");
-            } else {
-                status.append("Mesa não inicializada.\n");
-            }
-        }
-        return status.toString();
-    }
-
-
-    /**
-     * Retorna a fila de espera de requisições.
-     *
-     * @return String com a fila de espera de requisições.
-     */
-    public String filaDeEspera() {
-        StringBuilder fila = new StringBuilder();
-        for (Requisicao requisicao : emEspera) {
-            fila.append(requisicao.toString()).append("\n");
-        }
-        return fila.toString();
-    }
-
 }
+
