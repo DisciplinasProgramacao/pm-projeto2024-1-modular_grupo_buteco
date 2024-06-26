@@ -109,7 +109,7 @@ public class Main {
         System.out.println("Informe o número da mesa para encerrar a requisição:");
         int numMesa = scanner.nextInt();
         scanner.nextLine();
-        Mesa mesaEncerrada = restaurante.encerrarAtendimento(numMesa);
+        restaurante.encerrarAtendimento(numMesa);
         System.out.println("Requisição na mesa " + numMesa + " encerrada com sucesso.");
     }
 
