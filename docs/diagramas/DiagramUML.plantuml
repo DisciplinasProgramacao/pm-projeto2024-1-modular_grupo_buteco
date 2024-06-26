@@ -1,0 +1,143 @@
+@startuml
+package org.example {
+
+  class Cliente {
+    - static int ultimoID
+    - String nomeCliente
+    - int idCliente
+
+    + Cliente(String nome)
+    + String toString()
+    + int hashCode()
+    + String hashNome()
+  }
+
+  class Mesa {
+    - static int ultimoID
+    - int idMesa
+    - int capacidade
+    - boolean ocupada
+
+    + Mesa(int capacidade)
+    + void ocupar()
+    + void desocupar()
+    + boolean estahLiberada(int quantPessoas)
+    + int getIdMesa()
+    + String toString()
+  }
+
+  class Item {
+    + String nome
+    + double preco
+    + String tipo
+
+    + getNome()
+    + getPreco()
+    + getTipo()
+    + toString()
+  }
+
+  enum Item {
+    MOQUECA_DE_PALMITO("Moqueca de Palmito", 32.00, "comida"),
+    FALAFEL_ASSADO("Falafel Assado", 20.00, "comida"),
+    SALADA_PRIMAVERA("Salada Primavera com Macarrão Konjac", 25.00, "comida"),
+    ESCONDIDINHO_DE_INHAME("Escondidinho de Inhame", 18.00, "comida"),
+    STROGONOFF_DE_COGUMELOS("Strogonoff de Cogumelos", 35.00, "comida"),
+    CACAROLA_DE_LEGUMES("Caçarola de Legumes", 22.00, "comida"),
+    AGUA("Água", 3.00, "bebida"),
+    COPO_DE_SUCO("Copo de Suco", 7.00, "bebida"),
+    REFRIGERANTE_ORGANICO("Refrigerante Orgânico", 7.00, "bebida"),
+    CERVEJA_VEGANA("Cerveja Vegana", 9.00, "bebida"),
+    TACA_DE_VINHO_VEGANO("Taça de Vinho Vegano", 18.00, "bebida")
+  }
+
+  abstract class Pedido {
+    - List<Item> itens
+
+    + Pedido()
+    + void adicionarItem(Item item)
+    + abstract double calcularPreco()
+    + List<Item> getItens()
+  }
+
+  class PedidoRegular extends Pedido {
+    - static double TAXA_SERVICO
+
+    + double calcularPreco()
+  }
+
+  class Requisicao {
+    - Cliente cliente
+    - Mesa mesa
+    - int quantPessoas
+    - LocalDateTime entrada
+    - LocalDateTime saida
+    - boolean encerrada
+    - Pedido pedido
+
+    + Requisicao(int quantPessoas, Cliente cliente)
+    + Mesa encerrar()
+    + void alocarMesa(Mesa mesa)
+    + boolean estahEncerrada()
+    + boolean ehDaMesa(int idMesa)
+    + void adicionarItemAoPedido(Item item)
+    + double calcularPrecoTotal()
+    + int getQuantPessoas()
+    + Pedido getPedido()
+    + Cliente getCliente()
+    + Mesa getMesa()
+    + String toString()
+  }
+
+  class Restaurante {
+    - static int MAX_CLIENTES
+    - static int MAX_FILA
+
+    - Mesa[] mesas
+    - Cliente[] clientes
+    - List<Requisicao> atendidas
+    - List<Requisicao> emEspera
+
+    - int quantClientes
+    - int quantMesas
+    - int requisicoesAtendidas
+    - int requisicoesEmEspera
+
+    + Restaurante(int numMesas)
+    + void addCliente(Cliente novo)
+    + Cliente localizarCliente(int id)
+    + Cliente localizarCliente1(String nome)
+    + Mesa localizarMesaDisponivel(int quantPessoas)
+    + Mesa encerrarAtendimento(int numeroMesa)
+    + Requisicao processarFila()
+    + void registrarRequisicao(Requisicao novaRequisicao)
+    + void adicionarItemAoPedido(int idCliente, Item item)
+    + String statusMesas()
+    + String filaDeEspera()
+  }
+
+  class Main {
+    - static Restaurante restaurante
+    - static Scanner scanner
+
+    + void main(String[] args)
+    + void pausa()
+    + void cabecalho()
+    + Cliente cadastrarCliente()
+    + void registrarRequisicao()
+    + void processarFilaRequisicoes()
+    + void encerrarRequisicao()
+    + void filaEspera()
+    + void filaAtendimento()
+  }
+
+  Cliente "1" --> "*" Pedido
+  Pedido "1" --> "*" Item
+  Restaurante "1" --> "*" Cliente
+  Restaurante "1" --> "*" Mesa
+  Restaurante "1" --> "*" Requisicao
+  Requisicao "1" --> "1" Cliente
+  Requisicao "1" --> "1" Mesa
+  Requisicao "1" --> "1" Pedido
+}
+@enduml
