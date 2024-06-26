@@ -171,6 +171,12 @@ public class Restaurante {
 
     }
 
+    /**
+     * Adiciona um item ao pedido de uma requisição específica.
+     *
+     * @param idCliente ID do cliente.
+     * @param item Item a ser adicionado ao pedido.
+     */
     public void adicionarItemAoPedido(int idCliente, Item item) {
         for (Requisicao requisicao : atendidas) {
             if (requisicao.getCliente().hashCode() == idCliente && !requisicao.estahEncerrada()) {
