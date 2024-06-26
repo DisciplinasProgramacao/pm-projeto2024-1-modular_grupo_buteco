@@ -1,9 +1,10 @@
 # Documentação do Projeto
 
 A documentação do projeto é composta pelos seguintes itens: 
- - [Diagramas de classe do projeto (histórico de versões)](/docs/diagramas/) **Obrigatório**
- - [Instruções para uso](/docs/instrucoes.md) **Obrigatório**
- - [Quadro de tarefas do projeto](https://insira.aqui.sua.URL) **Obrigatório para trabalhos em grupo**
- - [Link para o vídeo de apresentação (edite este mesmo md para colocar sua URL)](http://insira.aqui.sua.URL) **Somente em caso de apresentação por vídeo**
+ - [Diagramas de classe do projeto (histórico de versões)](/docs/diagramas/)
+     - 00_modelagem_buteco.drawio.png
+     - 01_LPM_Vegan.png
+     - Restaurante Vegano UML.png
 
-Para o "Quadro de Tarefas", o grupo de trabalho deve criar um Projeto no repositório e atualizar o link neste arquivo. Em caso de dúvidas sobre este processo, pergunte ao seu professor com urgência.
+ - [Instruções para uso](/docs/instrucoes.md)
+ - [Quadro de tarefas do projeto](https://github.com/DisciplinasProgramacao/pm-projeto2024-1-modular_grupo_buteco/issues)
