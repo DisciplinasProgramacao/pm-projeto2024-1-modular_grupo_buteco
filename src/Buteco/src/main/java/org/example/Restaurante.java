@@ -93,12 +93,15 @@ public class Restaurante {
 
     public Mesa encerrarAtendimento(int numeroMesa) throws OperacaoInvalidaException {
         for (Requisicao requisicao : atendidas) {
-            if (requisicao.estahEncerrada() && requisicao.getMesa().getIdMesa() == numeroMesa) {
-                requisicao.encerrar();
-                return requisicao.getMesa();
+            if (requisicao.getMesa() != null && requisicao.getMesa().getIdMesa() == numeroMesa) {
+                if (!requisicao.estahEncerrada()) {
+                    return requisicao.encerrar();
+                } else {
+                    throw new OperacaoInvalidaException("Requisição já encerrada para esta mesa.");
+                }
             }
         }
-        throw new OperacaoInvalidaException("Mesa não encontrada ou já encerrada.");
+        throw new OperacaoInvalidaException("Mesa não encontrada.");
     }
 
     public Requisicao processarFila() throws OperacaoInvalidaException {
