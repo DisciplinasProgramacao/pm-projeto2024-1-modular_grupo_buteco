@@ -72,14 +72,13 @@ public class Main {
         System.out.println("7- Sair");
     }
 
-    public static Cliente cadastrarCliente() throws Exception {
+   private static void cadastrarCliente() throws Exception {
         System.out.print("Digite o nome do cliente: ");
         String nomeCliente = scanner.nextLine();
 
         Cliente novoCliente = new Cliente(nomeCliente);
         restaurante.addCliente(novoCliente);
         System.out.println("Cliente cadastrado:\n" + novoCliente);
-        return novoCliente;
     }
 
     private static void registrarRequisicao() {
