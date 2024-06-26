@@ -171,6 +171,14 @@ public class Restaurante {
 
     }
 
+    public void adicionarItemAoPedido(int idCliente, Item item) {
+        for (Requisicao requisicao : atendidas) {
+            if (requisicao.getCliente().hashCode() == idCliente && !requisicao.estahEncerrada()) {
+                requisicao.adicionarItemAoPedido(item);
+            }
+        }
+    }
+
     /**
      * Registra uma nova requisição na fila de espera.
      *
