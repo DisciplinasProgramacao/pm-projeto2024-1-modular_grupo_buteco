@@ -43,9 +43,22 @@ public class Restaurante {
     /**
      * Cria as mesas com capacidade padrão.
      */
+    /**
+     * Cria as mesas com diferentes capacidades.
+     */
     private void criarMesas() {
-        for (int i = 0; i < quantMesas; i++) {
-            mesas[i] = new Mesa(4); // Capacidade padrão, ajuste conforme necessário
+        int index = 0;
+        // Cria 4 mesas para 4 pessoas
+        for (int i = 0; i < 4; i++) {
+            mesas[index++] = new Mesa(4);
+        }
+        // Cria 4 mesas para 6 pessoas
+        for (int i = 0; i < 4; i++) {
+            mesas[index++] = new Mesa(6);
+        }
+        // Cria 2 mesas para 8 pessoas
+        for (int i = 0; i < 2; i++) {
+            mesas[index++] = new Mesa(8);
         }
     }
 
@@ -197,10 +210,15 @@ public class Restaurante {
     public String statusMesas() {
         StringBuilder status = new StringBuilder();
         for (Mesa mesa : mesas) {
-            status.append(mesa.toString()).append("\n");
+            if (mesa != null) {
+                status.append(mesa.toString()).append("\n");
+            } else {
+                status.append("Mesa não inicializada.\n");
+            }
         }
         return status.toString();
     }
+
 
     /**
      * Retorna a fila de espera de requisições.
