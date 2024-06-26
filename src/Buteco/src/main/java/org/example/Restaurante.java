@@ -186,6 +186,22 @@ public class Restaurante {
     }
 
     /**
+     * Calcula o preço total do pedido de uma requisição específica.
+     *
+     * @param idCliente ID do cliente.
+     * @return Preço total do pedido ou -1 se a requisição não for encontrada.
+     */
+    public double calcularPrecoTotalPedido(int idCliente) {
+        for (Requisicao requisicao : atendidas) {
+            if (requisicao.getCliente().hashCode() == idCliente) {
+                return requisicao.calcularPrecoTotal();
+            }
+        }
+        return -1;
+    }
+
+
+    /**
      * Registra uma nova requisição na fila de espera.
      *
      * @param novaRequisicao Nova requisição a ser registrada.
