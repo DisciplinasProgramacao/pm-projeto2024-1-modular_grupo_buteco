@@ -34,11 +34,9 @@ public class Main {
             switch (op) {
                 case 1:
                     cadastrarCliente();
-                    pausa();
                     break;
                 case 2:
                     registrarRequisicao();
-                    pausa();
                     break;
                 case 3:
                     processarFilaRequisicoes();
@@ -60,11 +58,6 @@ public class Main {
                     break;
             }
         } while (op != 7);
-    }
-
-    static void pausa() {
-        System.out.println("Tecle Enter para continuar.");
-        scanner.nextLine();
     }
 
     static void cabecalho() {
@@ -98,7 +91,7 @@ public class Main {
             System.out.println("Cliente não encontrado!");
             return;
         }
-        System.out.println("Informe a quantidade de pessoas para a requisição:");
+        System.out.println("Informe a quantidade de pessoas para a mesa:");
         try {
             int quantPessoas = scanner.nextInt();
             Requisicao requisicao = new Requisicao(quantPessoas, cliente);
