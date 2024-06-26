@@ -39,6 +39,8 @@ public class Requisicao {
 	private LocalDateTime saida;
 	private boolean encerrada;
 
+	 private Pedido pedido;
+
 	/**
 	 * Cria uma requisição para quantPessoas em nome do cliente. A requisição é criada sem horário de entrada nem saída, sem mesa e com estado de não encerrada
 	 * @param quantPessoas Quantidade de pessoas a serem atendidas na mesa. Deve ser >= 1
@@ -52,6 +54,7 @@ public class Requisicao {
 		entrada = saida = null;
 		mesa = null;
 		encerrada = false;
+		pedido = new PedidoRegular();
 	}
 
 	/**
@@ -98,10 +101,34 @@ public class Requisicao {
 		return idMesa == mesa.getIdMesa();
 	}
 
+	 /**
+	  * Adiciona um item ao pedido da requisição.
+	  * @param item Item a ser adicionado ao pedido.
+	  */
+	 public void adicionarItemAoPedido(Item item) {
+		 if (!encerrada) {
+			 pedido.adicionarItem(item);
+		 }
+	 }
+
+	 /**
+	  * Calcula o preço total do pedido.
+	  * @return Preço total do pedido.
+	  */
+	 public double calcularPrecoTotal() {
+		 return pedido.calcularPreco();
+	 }
+
 	
 	public int getQuantPessoas(){
 		return quantPessoas;
 	}
+
+	public Pedido getPedido() { return pedido; }
+
+	public Cliente getCliente() { return cliente; }
+
+	public Mesa getMesa() { return mesa; }
 
 	public String toString(){
 		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
