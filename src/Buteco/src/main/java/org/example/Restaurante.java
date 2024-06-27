@@ -184,6 +184,7 @@ public class Restaurante {
         }
 
     }
+
     /**
      * Calcula o preço total do pedido de uma requisição específica.
      *
@@ -198,5 +199,21 @@ public class Restaurante {
         }
         return -1;
     }
+
+    /**
+     * Calcula o preço total do pedido de uma requisição específica por pessoa.
+     *
+     * @param idCliente ID do cliente.
+     * @return Preço total do pedido ou -1 se a requisição não for encontrada.
+     */
+    public double calcularPrecoTotalPedidoPorPessoa(int idCliente) {
+        for (Requisicao requisicao : atendidas) {
+            if (requisicao.getCliente().hashCode() == idCliente) {
+                return requisicao.calcularPrecoTotalPorPessoa();
+            }
+        }
+        return -1;
+    }
+
 }
 
