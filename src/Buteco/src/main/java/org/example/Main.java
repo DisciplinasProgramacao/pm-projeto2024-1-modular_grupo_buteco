@@ -45,9 +45,12 @@ public class Main {
                         filaEspera();
                         break;
                     case 7:
+                        adicionarItemAoPedido();
+                        break;
+
+                    case 8:
                         System.out.println("Saindo...");
                         break;
-                        
                     default:
                         System.out.println("Opção inválida. Tente novamente.");
                         break;
@@ -55,7 +58,7 @@ public class Main {
             } catch (Exception e) {
                 System.out.println("Erro durante a operação: " + e.getMessage());
             }
-        } while (op != 7);
+        } while (op != 8);
     }
 
     private static void cabecalho() {
@@ -71,7 +74,8 @@ public class Main {
         System.out.println("4- Encerrar uma Mesa");
         System.out.println("5- Fila de Atendimento do Restaurante");
         System.out.println("6- Fila de Espera do Restaurante");
-        System.out.println("7- Sair");
+        System.out.println("7- Realizar Pedido");
+        System.out.println("8- Sair");
     }
 
     private static void cadastrarCliente() throws Exception {
@@ -131,7 +135,7 @@ public class Main {
         scanner.nextLine();
         restaurante.encerrarAtendimento(numMesa);
         System.out.println("Requisição na mesa " + numMesa + " encerrada com sucesso.");
-        consultarPrecoTotal();
+        calcularPrecoTotalPedido();
     }
 
     private static void filaEspera() {
@@ -143,19 +147,58 @@ public class Main {
         System.out.println("Fila de Atendimentos:");
         System.out.println(restaurante.statusMesas());
     }
-    private static void consultarPrecoTotal() {
-        System.out.print("Digite o nome do cliente para consultar o total da conta: ");
-        String nomeCliente = scanner.nextLine();
-        try {
-            double total = restaurante.calcularPrecoTotalPedido(nomeCliente);
-            if (total != -1) {
-                System.out.printf("O total da conta para %s é R$ %.2f\n", nomeCliente, total);
-            } else {
-                System.out.println("Conta não encontrada para o cliente especificado.");
-            }
-        } catch (Exception e) {
-            System.out.println("Erro ao consultar o total da conta: " + e.getMessage());
+    private static void calcularPrecoTotalPedido() {
+        System.out.println("Informe o nome do cliente:");
+        String nome = scanner.nextLine();
+        Cliente cliente = restaurante.localizarClienteNome(nome);
+        if (cliente == null) {
+            System.out.println("Cliente não encontrado!");
+            return;
+        }
+
+        double precoTotal = restaurante.calcularPrecoTotalPedido(cliente.hashNome());
+        if (precoTotal >= 0) {
+            System.out.println("Preço total do pedido do cliente " + nome + ": R$ " + String.format("%.2f", precoTotal));
+        } else {
+            System.out.println("Requisição não encontrada para o cliente " + nome);
         }
     }
 
+    private static void adicionarItemAoPedido() {
+        System.out.println("Informe o nome do cliente:");
+        String nome = scanner.nextLine();
+        Cliente cliente = restaurante.localizarClienteNome(nome);
+        if (cliente == null) {
+            System.out.println("Cliente não encontrado!");
+            return;
+        }
+    
+        boolean continuar = true;
+    
+        while (continuar) {
+            System.out.println("Selecione um item para adicionar ao pedido:");
+            for (Item item : Item.values()) {
+                System.out.println(item.ordinal() + " - " + item);
+            }
+            System.out.println(Item.values().length + " - Voltar ao menu principal");
+    
+            try {
+                int itemIndex = scanner.nextInt();
+                scanner.nextLine();
+    
+                if (itemIndex == Item.values().length) {
+                    continuar = false;
+                } else if (itemIndex < 0 || itemIndex >= Item.values().length) {
+                    System.out.println("Índice de item inválido.");
+                } else {
+                    Item item = Item.values()[itemIndex];
+                    restaurante.adicionarItemAoPedido(cliente.hashNome(), item);
+                    System.out.println("Item " + item.getNome() + " adicionado ao pedido do cliente " + nome);
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida. Por favor, selecione um índice de item válido.");
+                scanner.nextLine();
+            }
+        }
+    }
 }
