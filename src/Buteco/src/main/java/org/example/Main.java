@@ -90,11 +90,29 @@ public class Main {
             System.out.println("Informe a quantidade de pessoas para a mesa:");
             int quantPessoas = scanner.nextInt();
             scanner.nextLine();
-            Requisicao requisicao = new Requisicao(quantPessoas, cliente);
-            restaurante.registrarRequisicao(requisicao);
-        } catch (InputMismatchException e) {
-            System.out.println("Por favor, informe um número válido para a quantidade de pessoas.");
+
+            // Solicitar o tipo de pedido
+            System.out.println("Informe o tipo de pedido (1 para Regular, 2 para Menu Fechado):");
+            int tipoPedidoInt = scanner.nextInt();
             scanner.nextLine();
+
+            TipoPedido tipoPedido;
+            if (tipoPedidoInt == 1) {
+                tipoPedido = TipoPedido.REGULAR;
+            } else if (tipoPedidoInt == 2) {
+                tipoPedido = TipoPedido.MENU_FECHADO;
+            } else {
+                throw new InputMismatchException("Tipo de pedido inválido.");
+            }
+
+            // Criar a requisição com base nos dados fornecidos
+            restaurante.registrarRequisicao(quantPessoas, cliente, tipoPedido);
+            System.out.println("Requisição registrada com sucesso.");
+        } catch (InputMismatchException e) {
+            System.out.println("Por favor, informe um número válido.");
+            scanner.nextLine();
+        } catch (OperacaoInvalidaException e) {
+            System.out.println("Erro: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Erro ao registrar a requisição: " + e.getMessage());
         }

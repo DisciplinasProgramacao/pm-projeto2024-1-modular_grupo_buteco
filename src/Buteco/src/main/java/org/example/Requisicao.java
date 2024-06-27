@@ -46,7 +46,7 @@ public class Requisicao {
 	 * @param quantPessoas Quantidade de pessoas a serem atendidas na mesa. Deve ser >= 1
 	 * @param cliente Cliente que faz o pedido. Não deve ser nulo.
 	 */
-	public Requisicao(int quantPessoas, Cliente cliente) {
+	public Requisicao(int quantPessoas, Cliente cliente, TipoPedido tipoPedido) {
 		this.quantPessoas = 1;
 		if(quantPessoas > 1 )
 			this.quantPessoas = quantPessoas;
@@ -55,6 +55,12 @@ public class Requisicao {
 		mesa = null;
 		encerrada = false;
 		pedido = new PedidoRegular();
+
+		if (tipoPedido == TipoPedido.MENU_FECHADO) {
+			this.pedido = new PedidoMenuFechado(quantPessoas);
+		} else {
+			this.pedido = new PedidoRegular();
+		}
 	}
 
 	/**

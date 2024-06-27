@@ -146,17 +146,21 @@ public class Restaurante {
     /**
      * Registra uma nova requisição na fila de espera do restaurante.
      *
-     * @param novaRequisicao A nova requisição a ser adicionada à fila de espera.
+     * @param quantPessoas Quantidade de pessoas a serem atendidas.
+     * @param cliente Cliente que faz a requisição.
+     * @param tipoPedido Tipo de pedido (REGULAR ou MENU_FECHADO).
      * @throws Exception Se a fila de espera estiver cheia.
      */
-    public void registrarRequisicao(Requisicao novaRequisicao) throws Exception {
+    public void registrarRequisicao(int quantPessoas, Cliente cliente, TipoPedido tipoPedido) throws Exception {
         if (emEspera.size() >= MAX_FILA) {
             throw new Exception("A fila de espera alcançou sua capacidade máxima.");
         }
+        Requisicao novaRequisicao = new Requisicao(quantPessoas, cliente, tipoPedido);
         emEspera.add(novaRequisicao);
         requisicoesEmEspera++;
         System.out.println("Requisição registrada com sucesso. Agora há " + requisicoesEmEspera + " requisições na fila de espera.");
     }
+
     /** 
     * Adiciona um item ao pedido de uma requisição específica.
     *
@@ -215,5 +219,7 @@ public class Restaurante {
         return -1;
     }
 
+    public void registrarRequisicao(Requisicao requisicao) {
+    }
 }
 
