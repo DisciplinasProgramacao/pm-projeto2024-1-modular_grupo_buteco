@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Main {
@@ -19,14 +20,14 @@ public class Main {
                 scanner.nextLine();
             } catch (InputMismatchException e) {
                 System.out.println("Entrada inválida. Por favor, digite um número de opção válido.");
-                scanner.next(); 
+                scanner.next();
                 continue;
             }
 
             try {
                 switch (op) {
                     case 1:
-                        cadastrarCliente(); 
+                        cadastrarCliente();
                         break;
                     case 2:
                         registrarRequisicao();
@@ -46,6 +47,7 @@ public class Main {
                     case 7:
                         System.out.println("Saindo...");
                         break;
+                        
                     default:
                         System.out.println("Opção inválida. Tente novamente.");
                         break;
@@ -65,14 +67,14 @@ public class Main {
     private static void exibirMenu() {
         System.out.println("1- Cadastrar Cliente");
         System.out.println("2- Registrar Requisição por mesa");
-        System.out.println("3- Alocar uma requisição");
-        System.out.println("4- Encerrar uma Requisição");
+        System.out.println("3- Alocar uma Mesa");
+        System.out.println("4- Encerrar uma Mesa");
         System.out.println("5- Fila de Atendimento do Restaurante");
         System.out.println("6- Fila de Espera do Restaurante");
         System.out.println("7- Sair");
     }
 
-   private static void cadastrarCliente() throws Exception {
+    private static void cadastrarCliente() throws Exception {
         System.out.print("Digite o nome do cliente: ");
         String nomeCliente = scanner.nextLine();
 
@@ -90,29 +92,31 @@ public class Main {
             System.out.println("Informe a quantidade de pessoas para a mesa:");
             int quantPessoas = scanner.nextInt();
             scanner.nextLine();
-            
+
             System.out.println("Informe o tipo de pedido (1 para Regular, 2 para Menu Fechado):");
             int tipoPedidoInt = scanner.nextInt();
             scanner.nextLine();
 
-            TipoPedido tipoPedido;
-            if (tipoPedidoInt == 1) {
-                tipoPedido = TipoPedido.REGULAR;
-            } else if (tipoPedidoInt == 2) {
-                tipoPedido = TipoPedido.MENU_FECHADO;
-            } else {
-                throw new InputMismatchException("Tipo de pedido inválido.");
-            }
-
+            TipoPedido tipoPedido = obterTipoPedido(tipoPedidoInt);
             restaurante.registrarRequisicao(quantPessoas, cliente, tipoPedido);
-            System.out.println("Requisição registrada com sucesso.");
         } catch (InputMismatchException e) {
-            System.out.println("Por favor, informe um número válido.");
-            scanner.nextLine();
-        } catch (OperacaoInvalidaException e) {
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println(e.getMessage());
+            scanner.nextLine(); 
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
         } catch (Exception e) {
             System.out.println("Erro ao registrar a requisição: " + e.getMessage());
+        }
+    }
+
+    private static TipoPedido obterTipoPedido(int tipoPedidoInt) throws InputMismatchException {
+        switch (tipoPedidoInt) {
+            case 1:
+                return TipoPedido.REGULAR;
+            case 2:
+                return TipoPedido.MENU_FECHADO;
+            default:
+                throw new InputMismatchException("Tipo de pedido inválido.");
         }
     }
 
@@ -127,6 +131,7 @@ public class Main {
         scanner.nextLine();
         restaurante.encerrarAtendimento(numMesa);
         System.out.println("Requisição na mesa " + numMesa + " encerrada com sucesso.");
+        consultarPrecoTotal();
     }
 
     private static void filaEspera() {
@@ -138,4 +143,19 @@ public class Main {
         System.out.println("Fila de Atendimentos:");
         System.out.println(restaurante.statusMesas());
     }
+    private static void consultarPrecoTotal() {
+        System.out.print("Digite o nome do cliente para consultar o total da conta: ");
+        String nomeCliente = scanner.nextLine();
+        try {
+            double total = restaurante.calcularPrecoTotalPedido(nomeCliente);
+            if (total != -1) {
+                System.out.printf("O total da conta para %s é R$ %.2f\n", nomeCliente, total);
+            } else {
+                System.out.println("Conta não encontrada para o cliente especificado.");
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao consultar o total da conta: " + e.getMessage());
+        }
+    }
+
 }
