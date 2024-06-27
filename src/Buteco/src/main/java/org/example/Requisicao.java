@@ -115,11 +115,16 @@ public class Requisicao {
 	  * Calcula o preço total do pedido.
 	  * @return Preço total do pedido.
 	  */
-	 public double calcularPrecoTotal() {
+	public double calcularPrecoTotal() {
 		 return pedido.calcularPreco();
 	 }
 
-	
+	 /**
+	  * Calcula o preço total do pedido por pessoa.
+	  * @return Preço total do pedido.
+	  */
+	public double calcularPrecoTotalPorPessoa() { return calcularPrecoTotal() / quantPessoas; }
+
 	public int getQuantPessoas(){
 		return quantPessoas;
 	}
