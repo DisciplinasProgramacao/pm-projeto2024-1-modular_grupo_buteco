@@ -90,8 +90,7 @@ public class Main {
             System.out.println("Informe a quantidade de pessoas para a mesa:");
             int quantPessoas = scanner.nextInt();
             scanner.nextLine();
-
-            // Solicitar o tipo de pedido
+            
             System.out.println("Informe o tipo de pedido (1 para Regular, 2 para Menu Fechado):");
             int tipoPedidoInt = scanner.nextInt();
             scanner.nextLine();
@@ -105,7 +104,6 @@ public class Main {
                 throw new InputMismatchException("Tipo de pedido inválido.");
             }
 
-            // Criar a requisição com base nos dados fornecidos
             restaurante.registrarRequisicao(quantPessoas, cliente, tipoPedido);
             System.out.println("Requisição registrada com sucesso.");
         } catch (InputMismatchException e) {
